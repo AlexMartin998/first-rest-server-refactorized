@@ -13,7 +13,7 @@
     <h1>Google Sign-in</h1>
     <div
       id="g_id_onload"
-      data-client_id="960448950637-ji8l0jp2ignc98cp8fil283tv2sc6f50.apps.googleusercontent.com"
+      data-client_id="13554802008-5qnp0pqcgvfdf9henufi34v5flgi5dc4.apps.googleusercontent.com"
       data-auto_prompt="false"
       data-callback="handleCredentialResponse"
     ></div>
@@ -31,7 +31,7 @@
 
     <script>
       var url = window.location.hostname.includes('localhost')
-        ? 'http://localhost:3300/join/social/google'
+        ? 'http://localhost:3000/join/social/google'
         : 'https://first-basic-rest-server-alx.herokuapp.com/api/auth/google';
 
       function handleCredentialResponse(response) {
