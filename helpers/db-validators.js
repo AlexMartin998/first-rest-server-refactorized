@@ -2,6 +2,8 @@
 
 const User = require('./../models/user.model.db.js');
 const Role = require('./../models/role.model.db.js');
+const Category = require('./../models/category.model.db.js');
+const Product = require('./../models/product.model.db.js');
 
 const isAlreadyRegistered = async (email = '') => {
   const emailExist = await User.findOne({ email });
@@ -33,8 +35,38 @@ const isValidRole = async (role = '') => {
     );
 }; */
 
+const categoryIDExist = async (id = '') => {
+  const category = await Category.findById(id);
+  if (!category || !category.state)
+    throw new Error(`Ctegory ID '${id}' doesn't exist!`);
+};
+
+const productIDExist = async (id = '') => {
+  const product = await Product.findById(id);
+  if (!product || !product.state)
+    throw new Error(`Product ID '${id}' doesn't exist!`);
+};
+
+// TODO: convert these 2 f(x) into one f(x)
+const productAlreadyRegis = async (name = '') => {
+  const product = await Product.findOne({ name: name.toLocaleLowerCase() });
+
+  if (product) throw new Error(`The Product '${name}' is already registered!`);
+};
+
+// const isSameName = async (name = '') => {
+//   const product = await Product.findOne({ name: name.toLocaleLowerCase() });
+
+//   if (product.name.toLocaleLowerCase() === name.toLocaleLowerCase())
+//     throw new Error('New name must not be the same!');
+// };
+
 module.exports = {
   isAlreadyRegistered,
   userIDExist,
   isValidRole,
+  categoryIDExist,
+  productIDExist,
+  productAlreadyRegis,
+  // isSameName,
 };

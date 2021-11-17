@@ -39,7 +39,7 @@ const googleSignIn = async (req = request, res = response) => {
       const data = {
         name,
         email,
-        password: 'No se aplica',
+        password: 'Not applicable',
         img,
         google: true,
       };

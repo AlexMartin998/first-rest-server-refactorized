@@ -2,6 +2,20 @@
 
 const { request, response } = require('express');
 
+const isAdmin = (req = request, res = response, next) => {
+  if (!req.authenticatedUser)
+    return res.status(401).json({ msg: 'Unathorized!' });
+
+  const { role, name } = req.authenticatedUser;
+
+  if (role !== 'ADMIN_ROLE')
+    return res
+      .status(402)
+      .json({ msg: `'${name}' is not an admin. - He can't do it.` });
+
+  next();
+};
+
 const isAdminOrSameUser = (req = request, res = response, next) => {
   if (!req.authenticatedUser)
     return res.status(401).json({ msg: 'Unathorized!' });
@@ -40,6 +54,7 @@ const hasValidRole = (...roles) => {
 };
 
 module.exports = {
+  isAdmin,
   isAdminOrSameUser,
   hasValidRole,
 };

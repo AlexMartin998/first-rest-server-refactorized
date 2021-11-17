@@ -3,9 +3,11 @@
 const validateFields = require('./validate-fields.middleware.js');
 const validateRole = require('./validate-role.middleware.js');
 const validateJSW = require('./validate-jwt.middleware.js');
+const existInCollection = require('./exist-in-collection.middleware.js');
 
 module.exports = {
   ...validateFields,
   ...validateRole,
   ...validateJSW,
+  ...existInCollection,
 };

@@ -5,7 +5,12 @@ const cors = require('cors');
 
 const { PORT } = require('../config');
 const dbConnection = require('../db/config.db');
-const { usersRoutes, authRoutes } = require('../routes');
+const {
+  usersRoutes,
+  authRoutes,
+  categoriesRoutes,
+  productsRoutes,
+} = require('../routes');
 
 class Server {
   constructor() {
@@ -13,8 +18,10 @@ class Server {
     this.port = PORT;
 
     this.paths = {
-      users: '/api/users',
       auth: '/join',
+      categories: '/api/categories',
+      products: '/api/products',
+      users: '/api/users',
     };
 
     // Connect DB
@@ -40,6 +47,8 @@ class Server {
   routes() {
     this.app.use(this.paths.users, usersRoutes);
     this.app.use(this.paths.auth, authRoutes);
+    this.app.use(this.paths.categories, categoriesRoutes);
+    this.app.use(this.paths.products, productsRoutes);
   }
 
   listen() {
