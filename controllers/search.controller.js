@@ -18,44 +18,79 @@ const searchUsers = async (query = '', res = response) => {
   }
 
   const regex = new RegExp(query, 'i');
+
   const users = await User.find({
     $or: [{ name: regex }, { mail: regex }],
     $and: [{ state: true }],
   });
 
-  return res.json({
+  res.json({
     results: users,
   });
 };
 
-const searchQuery = async (req = request, res = response) => {
-  try {
-    const { collection, query } = req.params;
+const searchCategories = async (query = '', res = response) => {
+  const isValidMongoId = ObjectId.isValid(query);
 
-    if (!allowedCollections.includes(collection))
-      return res
-        .status(400)
-        .json({ msg: `The collection '${collection}' does not exists!` });
+  if (isValidMongoId) {
+    const category = await Category.findById(query);
+    return res.json({
+      results: category && category.state ? [category] : [],
+    });
+  }
 
-    switch (collection) {
-      case 'users':
-        searchUsers(query, res);
-        break;
+  const regex = new RegExp(query, 'i');
 
-      case 'categories':
-        break;
+  const category = await Category.find({
+    name: regex,
+    state: true,
+  });
 
-      case 'products':
-        break;
+  res.json({ results: category });
+};
 
-      default:
-        return res.status(500).json({ msg: 'Something went wrong!' });
-    }
+const searchProducts = async (query = '', res = response) => {
+  const isValidMongoId = ObjectId.isValid(query);
 
-    return res.status(200).json({ msg: 'seoamdy' });
-  } catch (err) {
-    console.log(err);
-    return res.status(400).json({ err });
+  if (isValidMongoId) {
+    const product = await Product.findById(query).populate('category', 'name');
+    return res.json({
+      results: product && product.state ? [product] : [],
+    });
+  }
+
+  const regex = new RegExp(query, 'i');
+
+  const product = await Product.find({
+    name: regex,
+    state: true,
+  }).populate('category', 'name');
+
+  res.json({ results: product });
+};
+
+const searchQuery = (req = request, res = response) => {
+  const { collection, query } = req.params;
+
+  if (!allowedCollections.includes(collection))
+    return res
+      .status(400)
+      .json({ msg: `Collection: ${collection} is not an allowed collection.` });
+
+  switch (collection) {
+    case 'users':
+      searchUsers(query, res);
+      break;
+    case 'category':
+      searchCategories(query, res);
+      break;
+    case 'products':
+      searchProducts(query, res);
+      break;
+    case 'roles':
+      break;
+    default:
+      res.status(500).json({ msg: 'Something went wrong!' });
   }
 };
 

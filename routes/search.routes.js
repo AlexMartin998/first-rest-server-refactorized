@@ -3,8 +3,7 @@
 const router = require('express').Router();
 
 const { searchQuery } = require('../controllers');
-const { validateFields } = require('../middlewares');
 
-router.get('/:collection/:query', [validateFields], searchQuery);
+router.get('/:collection/:query', searchQuery);
 
 module.exports = router;
