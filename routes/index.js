@@ -5,4 +5,5 @@ module.exports = {
   authRoutes: require('./auth.routes.js'),
   categoriesRoutes: require('./categories.routes.js'),
   productsRoutes: require('./products.routes.js'),
+  searchRoutes: require('./search.routes.js'),
 };

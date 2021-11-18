@@ -23,18 +23,6 @@ const isValidRole = async (role = '') => {
     throw new Error(`The role: ${role} is not valid in this app.`);
 };
 
-/* const existInUserCollect = async (someData = '') => {
-  const alreadyExist = await User.findOne({ someData });
-  if (!alreadyExist)
-    throw new Error(
-      `${
-        someData.includes('@')
-          ? 'The email ' + someData + 'already registered!'
-          : ''
-      }`
-    );
-}; */
-
 const categoryIDExist = async (id = '') => {
   const category = await Category.findById(id);
   if (!category || !category.state)
@@ -47,19 +35,11 @@ const productIDExist = async (id = '') => {
     throw new Error(`Product ID '${id}' doesn't exist!`);
 };
 
-// TODO: convert these 2 f(x) into one f(x)
 const productAlreadyRegis = async (name = '') => {
   const product = await Product.findOne({ name: name.toLocaleLowerCase() });
 
   if (product) throw new Error(`The Product '${name}' is already registered!`);
 };
-
-// const isSameName = async (name = '') => {
-//   const product = await Product.findOne({ name: name.toLocaleLowerCase() });
-
-//   if (product.name.toLocaleLowerCase() === name.toLocaleLowerCase())
-//     throw new Error('New name must not be the same!');
-// };
 
 module.exports = {
   isAlreadyRegistered,
@@ -68,5 +48,4 @@ module.exports = {
   categoryIDExist,
   productIDExist,
   productAlreadyRegis,
-  // isSameName,
 };

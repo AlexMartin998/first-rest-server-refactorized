@@ -1,8 +1,10 @@
 'use strict';
-const { request, response } = require('express');
+const { request, response, query } = require('express');
+const { ObjectId } = require('mongoose').Types;
 
-const Category = require('./../models/category.model.db.js');
-const Product = require('./../models/product.model.db.js');
+const Category = require('../models/category.model.db.js');
+const Product = require('../models/product.model.db.js');
+const User = require('../models/user.model.db.js');
 
 const categoryIDNameExist = async (req = request, res = response, next) => {
   const { id } = req.params;
@@ -50,6 +52,26 @@ const categoryIDNameExist = async (req = request, res = response, next) => {
 };
  */
 
+const checkNewNameProduct = async (req = request, res = response, next) => {
+  const { id } = req.params;
+  const newName = req.body.newName.toLowerCase();
+
+  const productName = await Product.findOne({ name: newName.toLowerCase() });
+  const product = await Product.findById(id);
+  if (product.name === newName.toLowerCase())
+    return res.status(400).json({ msg: 'New name must not be the same!' });
+
+  if (productName)
+    return res
+      .status(400)
+      .json({ msg: `The Product '${newName}' is already registered!` });
+
+  next();
+};
+
+
+
 module.exports = {
   categoryIDNameExist,
+  checkNewNameProduct,
 };

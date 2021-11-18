@@ -44,7 +44,6 @@ const createProduct = async (req = request, res = response) => {
   };
 
   const product = new Product(data);
-
   await product.save();
 
   res.status(201).json({
@@ -56,18 +55,6 @@ const createProduct = async (req = request, res = response) => {
 const updateProdutc = async (req = request, res = response) => {
   const { id } = req.params;
   const newName = req.body.newName.toLowerCase();
-
-  //
-  const productName = await Product.findOne({ name: newName.toLowerCase() });
-  const product = await Product.findById(id);
-  if (product.name === newName.toLowerCase())
-    return res.status(400).json({ msg: 'New name must not be the same!' });
-
-  if (productName)
-    return res
-      .status(400)
-      .json({ msg: `The Product '${newName}' is already registered!` });
-  //
 
   const [, renamed] = await Promise.all([
     Product.findByIdAndUpdate(id, { name: newName }),

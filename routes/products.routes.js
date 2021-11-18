@@ -3,12 +3,16 @@
 const router = require('express').Router();
 const { check } = require('express-validator');
 
-const { validateFields, validateJWT, isAdmin } = require('../middlewares');
+const {
+  validateFields,
+  validateJWT,
+  isAdmin,
+  checkNewNameProduct,
+} = require('../middlewares');
 const {
   categoryIDExist,
   productAlreadyRegis,
   productIDExist,
-  isSameName,
 } = require('../helpers');
 const {
   getProducts,
@@ -56,6 +60,7 @@ router.put(
     validateFields,
     check('id').custom(productIDExist),
     validateFields,
+    checkNewNameProduct,
   ],
   updateProdutc
 );

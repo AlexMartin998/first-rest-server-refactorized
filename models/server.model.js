@@ -10,6 +10,7 @@ const {
   authRoutes,
   categoriesRoutes,
   productsRoutes,
+  searchRoutes,
 } = require('../routes');
 
 class Server {
@@ -21,6 +22,7 @@ class Server {
       auth: '/join',
       categories: '/api/categories',
       products: '/api/products',
+      search: '/api/search',
       users: '/api/users',
     };
 
@@ -49,6 +51,7 @@ class Server {
     this.app.use(this.paths.auth, authRoutes);
     this.app.use(this.paths.categories, categoriesRoutes);
     this.app.use(this.paths.products, productsRoutes);
+    this.app.use(this.paths.search, searchRoutes);
   }
 
   listen() {
