@@ -52,7 +52,8 @@ const serveImg = async (req = request, res = response) => {
       return res.status(500).json({ msg: 'Collection not allowed!' });
   }
 
-  // Clear previous images
+  //  previous images
+  // Delete previous images
   if (model.img) {
     const imgPath = path.join(__dirname, './../uploads', collection, model.img);
     if (fs.existsSync(imgPath)) return res.sendFile(imgPath);
@@ -150,7 +151,6 @@ const uploadImgCloudinary = async (req = request, res = response) => {
 };
 
 // TODO: Serve img <- Claudinary
-
 
 module.exports = {
   uploadFileController,
