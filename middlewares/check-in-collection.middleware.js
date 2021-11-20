@@ -58,6 +58,7 @@ const checkNewNameProduct = async (req = request, res = response, next) => {
 
   const productName = await Product.findOne({ name: newName.toLowerCase() });
   const product = await Product.findById(id);
+  
   if (product.name === newName.toLowerCase())
     return res.status(400).json({ msg: 'New name must not be the same!' });
 
@@ -69,9 +70,35 @@ const checkNewNameProduct = async (req = request, res = response, next) => {
   next();
 };
 
+const idExistUpload = async (req = request, res = response, next) => {
+  const { collection, id } = req.params;
+  let model;
 
+  const checkInCollection = () => {
+    if (!model || !model.state)
+      return res
+        .status(400)
+        .json({ msg: `${collection} ID '${id}' doesn't exist!` });
+
+    return next();
+  };
+
+  switch (collection) {
+    case 'users':
+      model = await User.findById(id);
+      return checkInCollection();
+
+    case 'products':
+      model = await User.findById(id);
+      return checkInCollection();
+
+    default:
+      break;
+  }
+};
 
 module.exports = {
   categoryIDNameExist,
   checkNewNameProduct,
+  idExistUpload,
 };
