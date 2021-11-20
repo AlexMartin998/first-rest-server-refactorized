@@ -23,12 +23,14 @@ const isValidRole = async (role = '') => {
     throw new Error(`The role: ${role} is not valid in this app.`);
 };
 
+// Categories
 const categoryIDExist = async (id = '') => {
   const category = await Category.findById(id);
   if (!category || !category.state)
     throw new Error(`Ctegory ID '${id}' doesn't exist!`);
 };
 
+// Products
 const productIDExist = async (id = '') => {
   const product = await Product.findById(id);
   if (!product || !product.state)
@@ -41,6 +43,15 @@ const productAlreadyRegis = async (name = '') => {
   if (product) throw new Error(`The Product '${name}' is already registered!`);
 };
 
+// allowed collections
+const allowedCollections = (collection = '', collections = []) => {
+  const isIncluded = collections.includes(collection);
+  if (!isIncluded)
+    throw new Error(`Collection '${collection}' is not allowed!`);
+
+  return true;
+};
+
 module.exports = {
   isAlreadyRegistered,
   userIDExist,
@@ -48,4 +59,5 @@ module.exports = {
   categoryIDExist,
   productIDExist,
   productAlreadyRegis,
+  allowedCollections,
 };

@@ -5,6 +5,7 @@ const authController = require('./auth.controller.js');
 const categoriesController = require('./categories.controller.js');
 const productsController = require('./products.controller.js');
 const searchController = require('./search.controller.js');
+const uploadController = require('./upload.controller.js');
 
 module.exports = {
   ...usersController,
@@ -12,4 +13,5 @@ module.exports = {
   ...categoriesController,
   ...productsController,
   ...searchController,
+  ...uploadController,
 };

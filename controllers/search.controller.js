@@ -9,6 +9,8 @@ const Product = require('./../models/product.model.db.js');
 
 const allowedCollections = ['users', 'categories', 'products'];
 
+const genRegex = (query = '') => new RegExp(query, 'i');
+
 const searchUsers = async (query = '', res = response) => {
   const isValidMongoId = ObjectId.isValid(query);
 
@@ -17,7 +19,7 @@ const searchUsers = async (query = '', res = response) => {
     return res.json({ results: user && user.state ? [user] : [] });
   }
 
-  const regex = new RegExp(query, 'i');
+  const regex = genRegex(query);
 
   const users = await User.find({
     $or: [{ name: regex }, { email: regex }],
@@ -39,7 +41,7 @@ const searchCategories = async (query = '', res = response) => {
     });
   }
 
-  const regex = new RegExp(query, 'i');
+  const regex = genRegex(query);
 
   const category = await Category.find({
     name: regex,
@@ -59,7 +61,7 @@ const searchProducts = async (query = '', res = response) => {
     });
   }
 
-  const regex = new RegExp(query, 'i');
+  const regex = genRegex(query);
 
   const product = await Product.find({
     name: regex,
