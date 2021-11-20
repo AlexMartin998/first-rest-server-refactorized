@@ -5,14 +5,10 @@ const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
-const User = require('./../models/user.model.db.js');
-const Product = require('./../models/product.model.db.js');
-const { uploadFile } = require('../helpers');
+const { uploadFile, getModel } = require('../helpers');
 const { CLOUDINARY_URL } = require('../config');
 
 cloudinary.config(CLOUDINARY_URL);
-
-// TODO: Refactorizar: Middleware / Helper q se utilice aqui
 
 const uploadFileController = async (req = request, res = response) => {
   try {
@@ -29,34 +25,15 @@ const uploadFileController = async (req = request, res = response) => {
 const serveImg = async (req = request, res = response) => {
   const { collection, id } = req.params;
   const placeholder = path.join(__dirname, './../assets/nope-not-here.png');
-  let model;
 
-  switch (collection) {
-    case 'users':
-      model = await User.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID: ${id} doesn't exist!` });
-      break;
+  const model = await getModel(collection, id);
 
-    case 'products':
-      model = await Product.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID: ${id} doesn't exist!` });
-      break;
-
-    default:
-      return res.status(500).json({ msg: 'Collection not allowed!' });
-  }
-
-  //  previous images
-  // Delete previous images
+  // Get img path
   if (model.img) {
     const imgPath = path.join(__dirname, './../uploads', collection, model.img);
     if (fs.existsSync(imgPath)) return res.sendFile(imgPath);
+
+    return res.status(200).json({ ImgUrl: model.img });
   }
 
   res.sendFile(placeholder);
@@ -64,34 +41,16 @@ const serveImg = async (req = request, res = response) => {
 
 const updateImg = async (req = request, res = response) => {
   const { collection, id } = req.params;
-  let model;
 
-  switch (collection) {
-    case 'users':
-      model = await User.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID '${id}' doesn't exist!` });
-      break;
+  const model = await getModel(collection, id);
 
-    case 'products':
-      model = await Product.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID: ${id} doesn't exist!` });
-      break;
-
-    default:
-      return res.status(500).json({ msg: 'Collection not allowed!' });
-  }
-
+  // Delete previous images
   if (model.img) {
     const imgPath = path.join(__dirname, './../uploads', collection, model.img);
     if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
   }
 
+  // Upload new image
   try {
     const fileName = await uploadFile(req.files, undefined, collection);
     model.img = fileName;
@@ -105,32 +64,22 @@ const updateImg = async (req = request, res = response) => {
   }
 };
 
-const uploadImgCloudinary = async (req = request, res = response) => {
+const updateImgCloudinary = async (req = request, res = response) => {
   const { collection, id } = req.params;
-  let model;
+  const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
-  switch (collection) {
-    case 'users':
-      model = await User.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID: ${id} doesn't exist!` });
-      break;
+  const model = await getModel(collection, id);
 
-    case 'products':
-      model = await Product.findById(id);
-      if (!model)
-        return res
-          .status(400)
-          .json({ msg: `${collection} ID: ${id} doesn't exist!` });
-      break;
+  // Validate file extension
+  const { file } = req.files;
+  const fileExtension = file.name.split('.').at(-1);
 
-    default:
-      return res.status(500).json({ msg: 'Collection not allowed!' });
-  }
+  if (!allowedExtensions.includes(fileExtension))
+    return res
+      .status(400)
+      .json({ msg: `File not allowed: '.${fileExtension}' isn't allowed!` });
 
-  // Clear previous images
+  // Delete previous images
   if (model.img) {
     const arrName = model.img.split('/');
     const [public_id] = arrName.at(-1).split('.');
@@ -150,11 +99,14 @@ const uploadImgCloudinary = async (req = request, res = response) => {
   });
 };
 
+<<<<<<< HEAD
 // TODO: Serve img <- Claudinary
 
+=======
+>>>>>>> testMiddelUpload
 module.exports = {
   uploadFileController,
   serveImg,
   updateImg,
-  uploadImgCloudinary,
+  updateImgCloudinary,
 };

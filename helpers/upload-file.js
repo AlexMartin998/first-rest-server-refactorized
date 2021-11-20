@@ -2,6 +2,7 @@
 
 const path = require('path');
 const uuidv4 = require('uuid').v4;
+const cloudinary = require('cloudinary').v2;
 
 const uploadFile = (
   files,
@@ -14,7 +15,7 @@ const uploadFile = (
     const { file } = files;
     const fileExtension = file.name.split('.').at(-1);
 
-    // Validate extension
+    // Validate file extension
     if (!allowedExtensions.includes(fileExtension))
       return reject(`File not allowed: '.${fileExtension}' isn't allowed!`);
 
