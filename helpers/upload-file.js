@@ -35,25 +35,6 @@ const uploadFile = (
   });
 };
 
-const uploadImgCloudinary = async (
-  model,
-  file,
-  tempFilePath,
-  allowedExtensions = ['png', 'jpg', 'jpeg', 'gif']
-) => {
-  // Validate file extension
-  const fileExtension = file.name.split('.').at(-1);
-  if (!allowedExtensions.includes(fileExtension))
-    return reject(`File not allowed: '.${fileExtension}' isn't allowed!`);
-
-  // Upload img
-  const { secure_url } = await cloudinary.uploader.upload(tempFilePath);
-  model.img = secure_url;
-
-  await model.save();
-};
-
 module.exports = {
   uploadFile,
-  uploadImgCloudinary,
 };

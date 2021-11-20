@@ -5,14 +5,10 @@ const path = require('path');
 const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
-const User = require('./../models/user.model.db.js');
-const Product = require('./../models/product.model.db.js');
 const { uploadFile, getModel } = require('../helpers');
 const { CLOUDINARY_URL } = require('../config');
 
 cloudinary.config(CLOUDINARY_URL);
-
-// TODO: Refactorizar: Middleware / Helper q se utilice aqui
 
 const uploadFileController = async (req = request, res = response) => {
   try {
@@ -70,7 +66,18 @@ const updateImg = async (req = request, res = response) => {
 
 const updateImgCloudinary = async (req = request, res = response) => {
   const { collection, id } = req.params;
+  const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+
   const model = await getModel(collection, id);
+
+  // Validate file extension
+  const { file } = req.files;
+  const fileExtension = file.name.split('.').at(-1);
+
+  if (!allowedExtensions.includes(fileExtension))
+    return res
+      .status(400)
+      .json({ msg: `File not allowed: '.${fileExtension}' isn't allowed!` });
 
   // Delete previous images
   if (model.img) {
@@ -91,8 +98,6 @@ const updateImgCloudinary = async (req = request, res = response) => {
     model,
   });
 };
-
-// TODO: Serve img <- Claudinary
 
 module.exports = {
   uploadFileController,
