@@ -99,11 +99,6 @@ const updateImgCloudinary = async (req = request, res = response) => {
   });
 };
 
-<<<<<<< HEAD
-// TODO: Serve img <- Claudinary
-
-=======
->>>>>>> testMiddelUpload
 module.exports = {
   uploadFileController,
   serveImg,
