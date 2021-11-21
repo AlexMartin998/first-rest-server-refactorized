@@ -55,6 +55,7 @@ const updateImg = async (req = request, res = response) => {
     const fileName = await uploadFile(req.files, undefined, collection);
     model.img = fileName;
     await model.save();
+    
     res.json({
       msg: 'Updated!',
       model,
