@@ -1,5 +1,5 @@
 'use strict';
-const { request, response, query } = require('express');
+const { request, response } = require('express');
 const { ObjectId } = require('mongoose').Types;
 
 const Category = require('../models/category.model.db.js');
@@ -58,7 +58,7 @@ const checkNewNameProduct = async (req = request, res = response, next) => {
 
   const productName = await Product.findOne({ name: newName.toLowerCase() });
   const product = await Product.findById(id);
-  
+
   if (product.name === newName.toLowerCase())
     return res.status(400).json({ msg: 'New name must not be the same!' });
 
@@ -68,6 +68,35 @@ const checkNewNameProduct = async (req = request, res = response, next) => {
       .json({ msg: `The Product '${newName}' is already registered!` });
 
   next();
+};
+
+const idExistSearch = async (req = request, res = response, next) => {
+  const { collection, query } = req.params;
+  const isValidMongoId = ObjectId.isValid(query);
+  if (!isValidMongoId) return next();
+
+  let model;
+
+  const checkInCollection = () =>
+    res.json({
+      results: model && model.state ? [model] : [],
+    });
+
+  switch (collection) {
+    case 'users':
+      model = await User.findById(query);
+      return checkInCollection();
+
+    case 'categories':
+      model = await Category.findById(query);
+      return checkInCollection();
+
+    case 'products':
+      model = await Product.findById(query).populate('category', 'name');
+
+    default:
+      break;
+  }
 };
 
 const idExistUpload = async (req = request, res = response, next) => {
@@ -100,5 +129,6 @@ const idExistUpload = async (req = request, res = response, next) => {
 module.exports = {
   categoryIDNameExist,
   checkNewNameProduct,
+  idExistSearch,
   idExistUpload,
 };
