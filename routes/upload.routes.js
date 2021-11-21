@@ -7,6 +7,7 @@ const {
   validateFile,
   validateFields,
   idExistUpload,
+  validateFileExts,
 } = require('../middlewares');
 const { allowedCollections, userIDExist } = require('../helpers');
 const {
@@ -16,7 +17,15 @@ const {
   updateImgCloudinary,
 } = require('../controllers');
 
-router.post('/', validateFile, uploadFileController);
+router.post(
+  '/',
+  [
+    validateFileExts(['txt', 'md']),
+    validateFile,
+    validateFields,
+  ],
+  uploadFileController
+);
 
 router.get(
   '/:collection/:id',
@@ -41,6 +50,7 @@ router.put(
     check('collection').custom(c =>
       allowedCollections(c, ['users', 'products'])
     ),
+    validateFileExts(['png', 'jpg', 'jpeg', 'gif']),
     idExistUpload,
     validateFields,
   ],

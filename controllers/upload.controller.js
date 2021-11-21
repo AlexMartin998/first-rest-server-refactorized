@@ -12,9 +12,9 @@ cloudinary.config(CLOUDINARY_URL);
 
 const uploadFileController = async (req = request, res = response) => {
   try {
-    // const fileName = await uploadFile(req.files, ['txt', 'md'], 'textFiles');
-    // const fileName = await uploadFile(req.files, ['pdf'], 'pdf');
-    const fileName = await uploadFile(req.files, undefined, 'images');
+    const fileName = await uploadFile(req.files, 'textFiles');
+    // const fileName = await uploadFile(req.files, 'pdf');
+    // const fileName = await uploadFile(req.files, 'images');
 
     res.status(201).json({ fileName });
   } catch (err) {
@@ -52,10 +52,10 @@ const updateImg = async (req = request, res = response) => {
 
   // Upload new image
   try {
-    const fileName = await uploadFile(req.files, undefined, collection);
+    const fileName = await uploadFile(req.files, collection);
     model.img = fileName;
     await model.save();
-    
+
     res.json({
       msg: 'Updated!',
       model,
@@ -70,15 +70,6 @@ const updateImgCloudinary = async (req = request, res = response) => {
   const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
   const model = await getModel(collection, id);
-
-  // Validate file extension
-  const { file } = req.files;
-  const fileExtension = file.name.split('.').at(-1);
-
-  if (!allowedExtensions.includes(fileExtension))
-    return res
-      .status(400)
-      .json({ msg: `File not allowed: '.${fileExtension}' isn't allowed!` });
 
   // Delete previous images
   if (model.img) {
