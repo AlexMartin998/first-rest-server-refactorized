@@ -20,7 +20,7 @@ const {
 // Get all categories - public
 router.get('/', getCategories);
 
-// Get a category by ID - public  - Middleware personlizado id exist?
+// Get a category by ID - public
 router.get(
   '/:id',
   [

@@ -43,9 +43,9 @@ router.post(
     check('category', 'Category is required!').not().isEmpty(),
     check('category', 'It is not a valid Mongo ID').isMongoId(),
     validateFields,
-    check('name').custom(productAlreadyRegis),
-    validateFields,
     check('category').custom(categoryIDExist),
+    validateFields,
+    check('name').custom(productAlreadyRegis),
     validateFields,
   ],
   createProduct

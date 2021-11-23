@@ -15,7 +15,8 @@ const categoryIDNameExist = async (req = request, res = response, next) => {
   if (!category || !category.state)
     return res.status(400).json({ msg: `Ctegory ID '${id}' doesn't exist!` });
 
-  if (!newName) return next(); // 'Cause it's not necessary to delete
+  // 'Cause it's not necessary to update/delete
+  if (!newName) return next();
   const categoryName = await Category.findOne({ name: newName.toUpperCase() });
 
   if (newName.toUpperCase() === category.name)

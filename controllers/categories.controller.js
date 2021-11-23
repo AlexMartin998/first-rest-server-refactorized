@@ -63,10 +63,8 @@ const updateCategory = async (req = request, res = response) => {
   const { id } = req.params;
   const { newName } = req.body;
 
-  const [, renamed] = await Promise.all([
-    Category.findByIdAndUpdate(id, { name: newName }),
-    Category.findById(id),
-  ]);
+  await Category.findByIdAndUpdate(id, { name: newName });
+  const renamed = await Category.findById(id);
 
   res.json({
     msg: 'Update - PUT | Category updated!',
