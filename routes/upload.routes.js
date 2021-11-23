@@ -9,7 +9,7 @@ const {
   idExistUpload,
   validateFileExts,
 } = require('../middlewares');
-const { allowedCollections, userIDExist } = require('../helpers');
+const { allowedCollections } = require('../helpers');
 const {
   uploadFileController,
   // updateImg, // Upload images to our server
@@ -20,7 +20,8 @@ const {
 router.post(
   '/',
   [
-    validateFileExts(['txt', 'md']),
+    validateFileExts(['png', 'jpg', 'jpeg', 'gif']),
+    // validateFileExts(['txt', 'md']),
     validateFile,
     validateFields,
   ],

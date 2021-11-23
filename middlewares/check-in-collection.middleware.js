@@ -30,29 +30,6 @@ const categoryIDNameExist = async (req = request, res = response, next) => {
   next();
 };
 
-/* Si me envian name and new name
- const Category = require('./../models/category.model.db.js');
-
-const categoryIDNameExist = async (req = request, res = response, next) => {
-  const { id } = req.params;
-  const { name } = req.body;
-
-  const category = await Category.findById(id);
-
-  if (!category || !category.state)
-    return res.status(400).json({ msg: `Ctegory ID '${id}' doesn't exist!` });
-
-  const categoryName = await Category.findOne({ name: name.toUpperCase() });
-
-  if (!categoryName || !categoryName.state)
-    return res
-      .status(400)
-      .json({ msg: `Category '${name}' does not exist!` });
-
-  next();
-};
- */
-
 const checkNewNameProduct = async (req = request, res = response, next) => {
   const { id } = req.params;
   const newName = req.body.newName.toLowerCase();

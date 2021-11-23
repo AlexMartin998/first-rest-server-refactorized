@@ -16,7 +16,9 @@ const validateJWT = async (req = request, res = response, next) => {
     const { uid } = jwt.verify(token, SECRETORPRIVATEKEY);
 
     const user = await User.findById(uid);
-    if (!user) // Si llegasen a enviar token y uid de un deleted
+
+    // If they send the token and uid of a deleted user
+    if (!user)
       return res.status(401).json({ msg: "User doesn't exist! - in DB" });
 
     if (!user.state)

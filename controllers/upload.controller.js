@@ -67,7 +67,6 @@ const updateImg = async (req = request, res = response) => {
 
 const updateImgCloudinary = async (req = request, res = response) => {
   const { collection, id } = req.params;
-  const allowedExtensions = ['png', 'jpg', 'jpeg', 'gif'];
 
   const model = await getModel(collection, id);
 

@@ -56,10 +56,8 @@ const updateProdutc = async (req = request, res = response) => {
   const { id } = req.params;
   const newName = req.body.newName.toLowerCase();
 
-  const [, renamed] = await Promise.all([
-    Product.findByIdAndUpdate(id, { name: newName }),
-    Product.findById(id),
-  ]);
+  await Product.findByIdAndUpdate(id, { name: newName });
+  const renamed = await Product.findById(id);
 
   res.json({
     msg: 'Update - PUT | Product updated!',

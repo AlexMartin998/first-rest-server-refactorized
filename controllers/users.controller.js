@@ -72,33 +72,6 @@ const deleteUser = async (req = request, res = response) => {
     msg: 'Deleted!',
     userDeleted,
   });
-
-  /* Obviar :v  <--  Sin middleware
-  if (!req.authenticatedUser)
-    return res.status(401).json({ msg: 'Unathorized!' });
-
-  const { role, name, _id: uid } = req.authenticatedUser;
-
-  // // // 1. Physically delete  -  Not recommended
-  // // const userDeleted = await User.findByIdAndDelete(id);
-  // // // 2. Change user state in DB
-  const switchToDeletedState = async () =>
-    await User.findByIdAndUpdate(id, { state: false });
-
-  if (id === uid.toString()) {
-    userDeleted = await switchToDeletedState();
-    return res.json({
-      msg: 'Deleted!!!!',
-      userDeleted,
-    });
-  }
-
-  if (role !== 'ADMIN_ROLE')
-    return res.json({
-      msg: `Unauthorized! - '${name}' is not an administrator or the same user`,
-    });
-
-  userDeleted = await switchToDeletedState(); */
 };
 
 module.exports = {
